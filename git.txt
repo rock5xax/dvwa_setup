@@ -1,0 +1,35 @@
+# Step 1: Generate a new SSH key
+# Run this as the `git` user on your server (shuhari)
+# Use your GitHub-associated email address
+ssh-keygen -t ed25519 -C "your_email@example.com" -f ~/.ssh/id_ed25519_github
+
+# If your system doesn't support ed25519, use RSA instead:
+# ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f ~/.ssh/id_rsa_github
+
+# Press Enter to accept the default file location (~/.ssh/id_ed25519_github)
+# Optionally set a passphrase for extra security (or press Enter for none)
+
+# Step 2: Start the SSH agent
+eval "$(ssh-agent -s)"
+
+# Step 3: Add the new private key to the SSH agent
+ssh-add ~/.ssh/id_ed25519_github
+# If you used RSA: ssh-add ~/.ssh/id_rsa_github
+
+# Step 4: Display the public key to copy it
+cat ~/.ssh/id_ed25519_github.pub
+# If you used RSA: cat ~/.ssh/id_rsa_github.pub
+
+# Step 5: Add the public key to GitHub
+# 1. Copy the output of the `cat` command above
+# 2. Go to GitHub > Settings > SSH and GPG keys > New SSH key or Add SSH key
+# 3. Paste the key, title it (e.g., "shuhari-github-2025"), and save
+
+# Step 6: Test the SSH connection to GitHub
+ssh -T git@github.com
+# You should see: "Hi username! You've successfully authenticated..."
+
+# Step 7: Set permissions for SSH files
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519_github ~/.ssh/id_ed25519_github.pub
+# If you used RSA: chmod 600 ~/.ssh/id_rsa_github ~/.ssh/id_rsa_github.pub
